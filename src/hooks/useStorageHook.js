@@ -17,7 +17,6 @@ const useStorageHook = (file) => {
       }, async () => {
         const url = await fbStorageRef.getDownloadURL();
         setUrl(url);
-        console.log("async function is called");
       })
   }, [file]);
   return { progress, url, error }

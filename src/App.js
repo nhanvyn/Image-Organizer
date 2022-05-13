@@ -1,5 +1,4 @@
 
-import './App.css';
 import React from 'react';
 import Navbar from './comps/Navbar';
 import UploadForm from './comps/UploadForm';
