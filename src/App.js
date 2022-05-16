@@ -2,7 +2,7 @@
 import React from 'react';
 import Navbar from './comps/Navbar';
 import UploadForm from './comps/UploadForm';
-
+import ImageLayout from './comps/ImageLayout';
 
 
 
@@ -22,6 +22,7 @@ function App() {
     <div>
       <Navbar />
       <UploadForm />
+      <ImageLayout />
     </div>
   );
 }
