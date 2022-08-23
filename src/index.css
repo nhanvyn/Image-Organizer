@@ -95,7 +95,81 @@ label:hover {
 
 } */
 
-img {
-  width: 30px;
+.image-layout {
+  margin: 20px 40px auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 40px;
+}
+
+.img-wrap {
+  overflow: hidden;
+  height: 0;
+  padding: 50% 0;
+  position: relative;
+  opacity: 0.8;
+}
+
+.img-wrap img {
+  min-width: 100%;
+  min-height: 100%;
+  max-width: 150%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.BtContainer {
+  margin: 100px auto 10px;
+  text-align: center
+}
+
+.BtContainer button {
+  display: block;
+  width: 100px;
   height: 30px;
+  border: 1px solid var(--mainColor);
+  border-radius: 20%;
+  margin: 10px auto;
+  line-height: 30px;
+  color: var(--mainColor);
+  font-weight: bold;
+  font-size: 15px;
+  background: var(--mainColor);
+  color: white;
+  cursor: pointer;
+}
+
+.ModalWrapper {
+  width: 800px;
+  height: 500px;
+  box-shadow: 0 5px 16px rgba(0, 0, 0, 0.2);
+  background: #fff;
+  color: #000;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  position: relative;
+  z-index: 10;
+  border-radius: 10px;
+}
+
+.ModalContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  line-height: 1.8;
+  color: #141414;
+}
+
+.ModalCloseButton {
+
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  z-index: 10;
 }

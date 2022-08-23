@@ -4,13 +4,12 @@ import { fbFireStore } from '../firebase/config'
 const useFireStoreHook = (collection_name) => {
   const [docs, setDocs] = useState([]);
   useEffect(() => {
-    const unsub = fbFireStore.collection
-      (collection_name)
+    fbFireStore.collection(collection_name).orderBy("timeCreated", "asc")
       .onSnapshot(snapshot => {
         let arr = []
         snapshot.forEach((doc) => {
           var obj = { ...doc.data(), id: doc.id };
-          console.log("object created = ", obj);
+          //console.log("object created = ", obj);
           arr.push(obj);
           //setDocs((prev) => [...prev, obj])
         });

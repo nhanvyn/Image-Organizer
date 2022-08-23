@@ -9,10 +9,9 @@ const ImageLayout = () => {
 
   return (
     <div className='image-layout'>
-      <h1>{docs.length}</h1>
       {docs.map(doc => (
         <div className='img-wrap' key={doc.id}>
-          <img src={doc.url} alt="uploaded pic" />
+          <img src={doc.downloadURL} alt="uploaded pic" />
         </div>
       ))}
     </div>

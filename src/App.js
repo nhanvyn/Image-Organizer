@@ -3,7 +3,7 @@ import React from 'react';
 import Navbar from './comps/Navbar';
 import UploadForm from './comps/UploadForm';
 import ImageLayout from './comps/ImageLayout';
-
+import UploadButton from './comps/UploadButton';
 
 
 
@@ -17,11 +17,11 @@ function App() {
   //   console.log(data)
   // }, []);
 
-
   return (
     <div>
       <Navbar />
-      <UploadForm />
+      <UploadForm></UploadForm>
+
       <ImageLayout />
     </div>
   );
