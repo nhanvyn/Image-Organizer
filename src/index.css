@@ -31,23 +31,23 @@ code {
   letter-spacing: 2px;
 }
 
-/* label, input  */
-form {
+/* modal form, label input  */
+.modalForm {
   text-align: center;
   position: absolute;
   width: 100px;
-  left: 400px;
+  left: 460px;
   z-index: 12;
 }
 
-label input {
+.modalForm input {
   height: 0;
   width: 0;
   opacity: 0;
 
 }
 
-label {
+.modalForm label {
   display: block;
   width: 100px;
   height: 30px;
@@ -61,9 +61,14 @@ label {
   background: var(--fileSelectColor);
   color: white;
   cursor: pointer;
-
-
 }
+
+/* individual image form */
+.imageForm {
+  position: relative;
+}
+
+
 
 /* label:hover {
   background: var(--mainColor);
@@ -114,8 +119,19 @@ label {
 .modal-image-wrap {
   margin: 1rem 0.5rem;
   position: relative;
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 50px 50px;
+  border-style: dotted;
+  border-color: #555;
+  border-width: 2px;
+  display: block;
+  align-items: center;
+  /* box-shadow: black; */
 }
+
+/* .modal-image-wrap input {
+  position: relative;
+  width: 95%;
+} */
 
 .modal-image-wrap button {
   position: absolute;
@@ -168,7 +184,7 @@ label {
 /* clear Button */
 .clearBtContainer {
   position: absolute;
-  padding-left: 520px;
+  padding-left: 570px;
 }
 
 .clearBtContainer button {
@@ -222,7 +238,7 @@ label {
 }
 
 .ModalWrapper {
-  width: 1150px;
+  width: 1500px;
   height: 600px;
   box-shadow: 0 5px 16px rgba(0, 0, 0, 0.2);
   background: #fff;
@@ -268,5 +284,52 @@ label {
   height: 100vh;
 }
 
+/* tag-input */
+.tags-input-container {
+  border: 2px solid rgb(220, 210, 210);
+  padding: .5em;
+  border-radius: 3px;
+  margin-top: 1em;
+  width: min(80vw, 200px);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
 
-/* ImagePreview */
+.tag-item {
+  background-color: rgb(218, 216, 216);
+  display: inline-block;
+  padding: 0px .25em;
+  border-radius: 8px;
+
+  margin-left: 2px;
+  /* border-width: 10px; */
+}
+
+.tag-item .text {
+  font-size: 10px;
+}
+
+.tag-item .close {
+  height: 12px;
+  width: 12px;
+  background-color: rgb(48, 48, 48);
+
+  color: #fff;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: .3em;
+  font-size: 9px;
+
+}
+
+.tag-input {
+  flex-grow: 1;
+  padding: .5em 0;
+  border: none;
+  outline: none;
+  font-size: 10px;
+  margin-left: 0.5em;
+}

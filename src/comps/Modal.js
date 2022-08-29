@@ -10,16 +10,13 @@ export const ModalCloseButton = styled(MdClose)
 export const Modal = ({ showModal, setShowModal }) => {
 
   const [imageArr, setImageArr] = useState([]);
+  const [tagArr, setTagArr] = useState([]);
 
   const modalRef = useRef();
   const closeModal = e => {
     if (modalRef.current === e.target) {
       setShowModal(false);
     }
-  }
-
-  const Clear = (e) => {
-
   }
 
   const onSelectFile = (e) => {
@@ -29,14 +26,28 @@ export const Modal = ({ showModal, setShowModal }) => {
       return URL.createObjectURL(file);
     })
     setImageArr((prevState) => [...prevState, ...urlArray])
-
-
   }
 
   const Delete = (image) => {
     setImageArr(imageArr.filter((e) => e !== image));
+
     URL.revokeObjectURL(image);
+    image.target.value = null;
   }
+  const DeleteAll = () => {
+    setImageArr([])
+  }
+
+  const handleKeyDown = (e) => {
+    if (e.key !== 'Enter')
+      return;
+    else {
+      setTagArr((prev) => [...prev, e.target.value]);
+      
+    }
+
+  }
+
 
   return (
     <> {showModal ? (
@@ -47,14 +58,14 @@ export const Modal = ({ showModal, setShowModal }) => {
             <div className='ModalContent'>
               <h1> Choose up to 5 images </h1>
 
-              <form>
+              <form className='modalForm'>
                 <label>
                   <input type="file" multiple onChange={onSelectFile} />
                   <span>Add Photo</span>
                 </label>
               </form>
 
-              <div className='clearBtContainer'>
+              <div className='clearBtContainer' onClick={DeleteAll}>
                 <button>
                   Clear
                 </button>
@@ -67,6 +78,24 @@ export const Modal = ({ showModal, setShowModal }) => {
                     <div className='modal-image-wrap'>
                       <img src={image} height="200" alt="uploaded pic" />
                       <button onClick={() => Delete(image)}>X</button>
+
+                      <div className="tags-input-container">
+
+                        {
+                          tagArr && tagArr.map((tag, index) => {
+                            
+                            return (
+                              <div className='tag-item'>
+                                <span className='text'>{tag}</span>
+                                <span className='close'>x</span>
+                              </div>
+                            )
+                          })
+                        }
+                        <input className="tag-input" onKeyDown={handleKeyDown} type="text" placeholder="Add a tag"></input>
+                      </div>
+
+
                     </div>
                   );
                 })}
