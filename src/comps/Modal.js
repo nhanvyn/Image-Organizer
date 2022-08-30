@@ -11,11 +11,18 @@ export const Modal = ({ showModal, setShowModal }) => {
 
   const [imageArr, setImageArr] = useState([]);
   const [tagArr, setTagArr] = useState([]);
+  const inputRef = useRef();
 
   const modalRef = useRef();
+
   const closeModal = e => {
     if (modalRef.current === e.target) {
       setShowModal(false);
+      setImageArr([])
+      setTagArr([])
+      // for (let i = 0; i < imageRef.current.length; i++) {
+      //   imageRef.current[i].reset();
+      // }
     }
   }
 
@@ -26,24 +33,60 @@ export const Modal = ({ showModal, setShowModal }) => {
       return URL.createObjectURL(file);
     })
     setImageArr((prevState) => [...prevState, ...urlArray])
+
   }
 
-  const Delete = (image) => {
+
+
+  const Delete = (image, imageIndex) => {
     setImageArr(imageArr.filter((e) => e !== image));
 
     URL.revokeObjectURL(image);
-    image.target.value = null;
+    setTagArr(tagArr.filter(({ imageID, tagValue }) => {
+      if (imageID === imageIndex) {
+        return false;
+      }
+      return true;
+    }))
+
+
+    try {
+      inputRef.current.value = '';
+    }
+    catch (e) { }
   }
+
   const DeleteAll = () => {
     setImageArr([])
   }
 
-  const handleKeyDown = (e) => {
-    if (e.key !== 'Enter')
+  const RemoveTag = (i, e, tagVal) => {
+    // i is image index, tagVal is content of tag
+    console.log("[tagIndex, value] = " + i + " , " + tagVal)
+    // filter out the tags
+    setTagArr(tagArr.filter(({ imageID, tagValue }) => {
+      if (imageID === i) {
+        if (tagVal === tagValue)
+          return false;
+      }
+      return true;
+    }))
+  }
+
+  const handleKeyDown = (i, e) => {
+    if (e.key !== 'Enter' || e.target.value === '')
       return;
     else {
-      setTagArr((prev) => [...prev, e.target.value]);
-      
+      // setTagArr((prev) => [...prev, e.target.value]);
+      var value = e.target.value
+      // prevent adding duplicates
+      const duplicate = tagArr.find(({ imageID, tagValue }) => {
+        return (imageID === i && tagValue === value)
+      })
+      if (duplicate === undefined) {
+        setTagArr((prev) => [...prev, { 'imageID': i, 'tagValue': value }])
+      }
+      e.target.value = ''
     }
 
   }
@@ -60,7 +103,7 @@ export const Modal = ({ showModal, setShowModal }) => {
 
               <form className='modalForm'>
                 <label>
-                  <input type="file" multiple onChange={onSelectFile} />
+                  <input type="file" multiple onChange={onSelectFile} ref={inputRef} />
                   <span>Add Photo</span>
                 </label>
               </form>
@@ -72,27 +115,29 @@ export const Modal = ({ showModal, setShowModal }) => {
               </div>
 
               <div className='modal-image-layout'>
-                {imageArr && imageArr.map((image, index) => {
+                {imageArr && imageArr.map((image, i) => {
                   return (
 
-                    <div className='modal-image-wrap'>
+                    <div className='modal-image-wrap' key={image}>
                       <img src={image} height="200" alt="uploaded pic" />
-                      <button onClick={() => Delete(image)}>X</button>
+                      <button onClick={() => Delete(image, i)}>X</button>
 
                       <div className="tags-input-container">
 
                         {
-                          tagArr && tagArr.map((tag, index) => {
-                            
+                          tagArr && tagArr.map(({ imageID, tagValue }) => {
+
+                            console.log("imageID = " + imageID + " tag value: " + tagValue)
+                            if (imageID !== i) return null;
                             return (
-                              <div className='tag-item'>
-                                <span className='text'>{tag}</span>
-                                <span className='close'>x</span>
+                              <div className='tag-item' key={tagValue}>
+                                <span className='text'>{tagValue}</span>
+                                <span className='close' onClick={(e) => RemoveTag(i, e, tagValue)}>x</span>
                               </div>
                             )
                           })
                         }
-                        <input className="tag-input" onKeyDown={handleKeyDown} type="text" placeholder="Add a tag"></input>
+                        <input className="tag-input" onKeyDown={(e) => handleKeyDown(i, e)} type="text" placeholder="Add a tag"></input>
                       </div>
 
 
