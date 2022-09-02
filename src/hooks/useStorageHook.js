@@ -4,7 +4,7 @@ import { fbStorage, fbFireStore, timeStamp } from '../firebase/config'
 
 
 
-const useStorageHook = (files, setFiles) => {
+const useStorageHook = (files, setFiles, showProgress, setShowProgress) => {
 
   const firstRenderRef = useRef(true);
   const [urls, setUrls] = useState([]);
@@ -30,8 +30,8 @@ const useStorageHook = (files, setFiles) => {
   // }, [urls, currentUrl])
 
   useEffect(() => {
-
-    if (firstRenderRef.current){
+    console.log("useStorageHook is created")
+    if (firstRenderRef.current) {
       firstRenderRef.current = false;
       return;
     }
@@ -39,6 +39,7 @@ const useStorageHook = (files, setFiles) => {
     const promises = [];
     for (let i = 0; i < files.length; i++) {
       let file = files[i];
+      console.log("file_info: " + JSON.stringify(file) + "fileName" + file.name)
       const fbStorageRef = fbStorage.ref(file.name)
       const uploadTask = fbStorageRef.put(file);
       promises.push(uploadTask)
@@ -59,7 +60,7 @@ const useStorageHook = (files, setFiles) => {
             .then((downloadURL) => {
               const timeCreated = timeStamp
               console.log("Set URL to: " + downloadURL)
-              firestoreCollection.add({ downloadURL, timeCreated })
+              firestoreCollection.add({ downloadURL, timeCreated, hashtags: file['tags'] })
               setUrls((prevState) => [...prevState, downloadURL]);
             });
         }
@@ -69,10 +70,11 @@ const useStorageHook = (files, setFiles) => {
     Promise.all(promises)
       .then(() => {
         // alert("all images uploaded")
-        
+
         setFiles([])
+        setShowProgress(false);
       });
-  }, [files, setFiles]);
+  }, [files, setFiles, setShowProgress]);
 
   return { progress, urls, error }
 }

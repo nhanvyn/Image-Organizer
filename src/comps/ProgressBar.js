@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react'
 import useStorageHook from '../hooks/useStorageHook'
 
-const ProgressBar = ({ files, setFiles }) => {
-  const { urls, progress } = useStorageHook(files, setFiles);
+const ProgressBar = ({ files, setFiles, showProgress, setShowProgress }) => {
+  const { urls, progress } = useStorageHook(files, setFiles, showProgress, setShowProgress);
 
   useEffect(() => {
-   
+    
   }, [urls, setFiles])
 
   return (

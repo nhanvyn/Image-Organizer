@@ -28,12 +28,12 @@ function App() {
 
       <Navbar />
 
-      {/* <UploadForm></UploadForm> */}
+    
       <div className="BtContainer">
         <button onClick={openModal}> New Photo </button>
       </div>
 
-
+      
       {/* <ImageLayout /> */}
       <Modal showModal={showModal} setShowModal={setShowModal} />
     </div>

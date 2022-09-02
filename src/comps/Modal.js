@@ -1,8 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { MdClose } from 'react-icons/md';
 import styled from 'styled-components'
-
-
+import ProgressBar from './ProgressBar';
+import ImageLayout from './ImageLayout';
 export const ModalCloseButton = styled(MdClose)
 
 
@@ -12,7 +12,7 @@ export const Modal = ({ showModal, setShowModal }) => {
   const [imageArr, setImageArr] = useState([]);
   const [tagArr, setTagArr] = useState([]);
   const inputRef = useRef();
-
+  const [showProgress, setShowProgress] = useState(false);
   const modalRef = useRef();
 
   const closeModal = e => {
@@ -20,9 +20,7 @@ export const Modal = ({ showModal, setShowModal }) => {
       setShowModal(false);
       setImageArr([])
       setTagArr([])
-      // for (let i = 0; i < imageRef.current.length; i++) {
-      //   imageRef.current[i].reset();
-      // }
+
     }
   }
 
@@ -30,17 +28,17 @@ export const Modal = ({ showModal, setShowModal }) => {
     const selectedFiles = e.target.files;
     const arr = Array.from(selectedFiles)
     const urlArray = arr.map((file) => {
-      return URL.createObjectURL(file);
+      const newImage = file;
+      newImage["id"] = Math.random();
+      newImage["url"] = URL.createObjectURL(file)
+      newImage["tags"] = [];
+      return newImage;
     })
     setImageArr((prevState) => [...prevState, ...urlArray])
 
   }
-
-
-
   const Delete = (image, imageIndex) => {
     setImageArr(imageArr.filter((e) => e !== image));
-
     URL.revokeObjectURL(image);
     setTagArr(tagArr.filter(({ imageID, tagValue }) => {
       if (imageID === imageIndex) {
@@ -48,8 +46,6 @@ export const Modal = ({ showModal, setShowModal }) => {
       }
       return true;
     }))
-
-
     try {
       inputRef.current.value = '';
     }
@@ -85,73 +81,115 @@ export const Modal = ({ showModal, setShowModal }) => {
       })
       if (duplicate === undefined) {
         setTagArr((prev) => [...prev, { 'imageID': i, 'tagValue': value }])
+        // add tag into tag array of corresponding image
+
+        const matchImage = imageArr.find((image, index) => {
+          return index === i;
+        })
+
+        matchImage["tags"].push(value)
       }
       e.target.value = ''
     }
 
   }
 
+  const SubmitImage = (e) => {
+    if (imageArr.length > 0) {
+      setShowModal(false);
+      setShowProgress(true);
+    }
+  }
+
 
   return (
-    <> {showModal ? (
-      <div className='MdContainer'>
-        <div className='MdBackground' onClick={closeModal} ref={modalRef}>
-          <div className='ModalWrapper'>
+    <>
+      {
+        // rendering progress bar
+        showProgress ?
+          <div className="output">
+            {imageArr.length > 0 &&
+              <ProgressBar
+                files={imageArr}
+                setFiles={setImageArr}
+                showProgress={showProgress}
+                setShowProgress={setShowProgress}
+              />}
+          </div> : null
 
-            <div className='ModalContent'>
-              <h1> Choose up to 5 images </h1>
+      }
 
-              <form className='modalForm'>
-                <label>
-                  <input type="file" multiple onChange={onSelectFile} ref={inputRef} />
-                  <span>Add Photo</span>
-                </label>
-              </form>
 
-              <div className='clearBtContainer' onClick={DeleteAll}>
-                <button>
-                  Clear
-                </button>
-              </div>
+      {
+        // rendering image layout
+        <ImageLayout />
+      }
 
-              <div className='modal-image-layout'>
-                {imageArr && imageArr.map((image, i) => {
-                  return (
+      {showModal ? (
+        <div className='MdContainer'>
+          <div className='MdBackground' onClick={closeModal} ref={modalRef}>
+            <div className='ModalWrapper'>
 
-                    <div className='modal-image-wrap' key={image}>
-                      <img src={image} height="200" alt="uploaded pic" />
-                      <button onClick={() => Delete(image, i)}>X</button>
+              <div className='ModalContent'>
+                <h1> Choose up to 5 images </h1>
 
-                      <div className="tags-input-container">
+                <form className='modalForm'>
+                  <label>
+                    <input type="file" multiple onChange={onSelectFile} ref={inputRef} />
+                    <span>Add Photo</span>
+                  </label>
+                </form>
 
-                        {
-                          tagArr && tagArr.map(({ imageID, tagValue }) => {
+                <div className='clearBtContainer' onClick={DeleteAll}>
+                  <button>
+                    Clear
+                  </button>
+                </div>
 
-                            console.log("imageID = " + imageID + " tag value: " + tagValue)
-                            if (imageID !== i) return null;
-                            return (
-                              <div className='tag-item' key={tagValue}>
-                                <span className='text'>{tagValue}</span>
-                                <span className='close' onClick={(e) => RemoveTag(i, e, tagValue)}>x</span>
-                              </div>
-                            )
-                          })
-                        }
-                        <input className="tag-input" onKeyDown={(e) => handleKeyDown(i, e)} type="text" placeholder="Add a tag"></input>
+
+                <div className='modal-image-layout'>
+                  {imageArr && imageArr.map((image, i) => {
+                    return (
+
+                      <div className='modal-image-wrap' key={image.url}>
+                        <img src={image.url} height="200" alt="uploaded pic" />
+                        <button onClick={() => Delete(image, i)}>X</button>
+
+                        <div className="tags-input-container">
+
+                          {
+                            tagArr && tagArr.map(({ imageID, tagValue }) => {
+
+
+                              if (imageID !== i) return null;
+                              return (
+                                <div className='tag-item' key={tagValue}>
+                                  <span className='text'>{tagValue}</span>
+                                  <span className='close' onClick={(e) => RemoveTag(i, e, tagValue)}>x</span>
+                                </div>
+                              )
+                            })
+                          }
+                          <input className="tag-input" onKeyDown={(e) => handleKeyDown(i, e)} type="text" placeholder="Add a tag"></input>
+                        </div>
+
                       </div>
+                    );
+                  })}
+                </div>
+                <div className='submitBtContainer'>
+                  <button onClick={() => SubmitImage()}>
+                    Submit
+                  </button>
+                </div>
 
-
-                    </div>
-                  );
-                })}
               </div>
-
             </div>
           </div>
         </div>
-      </div>
 
-    ) : null}
+      ) : null}
+
     </>
   )
 };
