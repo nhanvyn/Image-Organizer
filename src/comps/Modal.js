@@ -7,7 +7,7 @@ export const ModalCloseButton = styled(MdClose)
 
 
 
-export const Modal = ({ showModal, setShowModal }) => {
+export const Modal = ({ showModal, setShowModal, searchTerm, setSearchTerm, distinctTerms, setDistinctTerms }) => {
 
   const [imageArr, setImageArr] = useState([]);
   const [tagArr, setTagArr] = useState([]);
@@ -122,7 +122,11 @@ export const Modal = ({ showModal, setShowModal }) => {
 
       {
         // rendering image layout
-        <ImageLayout />
+        <ImageLayout
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          distinctTerms={distinctTerms}
+          setDistinctTerms={setDistinctTerms} />
       }
 
       {showModal ? (

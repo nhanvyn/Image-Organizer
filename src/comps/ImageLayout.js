@@ -2,59 +2,71 @@ import React, { useEffect } from 'react'
 import useFirestoreHook from '../hooks/useFirestoreHook'
 
 
-const ImageLayout = () => {
+const ImageLayout = ({ searchTerm, setSearchTerm, distinctTerms, setDistinctTerms }) => {
   const { docs } = useFirestoreHook('images');
   useEffect(() => {
+    const allTerm = []
+    docs.map((doc, i) => (
+      doc.hashtags.map((tag) => (
+        allTerm.push(tag)
+      ))
+    ))
+
+    // console.log(allTerm)
+    const distinctArr = allTerm.filter(
+      (term, i) => allTerm.indexOf(term) === i
+    )
+    console.log("distinctArr = " + distinctArr)
+    setDistinctTerms(distinctArr)
+
   }, [docs])
 
-  const tags = ['dog', 'car', 'sunshine', 'sky', 'kvo', 'ven']
+  useEffect(() => {
+
+  }, [])
+
+  useEffect(() => {
+    if (searchTerm) {
+      console.log("IL term = " + searchTerm)
+    }
+
+  }, [searchTerm, setSearchTerm])
 
   return (
+
     <div className='image-layout'>
-
-      {docs.map((doc, id) => (
-        <div className='img-wrap' key={id}>
-          <div className='main-image'>
-            <img src={doc.downloadURL} alt="uploaded pic" />
-          </div>
-
-          <div className="tagBtContainer">
-            {doc.hashtags && doc.hashtags.map((tag, i) => {
-              return (<button key={i}>{tag}</button>)
+      {/* {
+        renderByTerm = (() => {
+          var containSearchTerm = false
+          docs.map((doc) => {
+            doc.hashtags.map((htag) => {
+              if (htag === searchTerm)
+                containSearchTerm = true;
             })
-            }
-
-
-          </div>
-        </div>
-      ))}
-
-      {/* <div className='img-wrap'>
-        <div className='main-image'>
-          <img src={'https://images.unsplash.com/photo-1453728013993-6d66e9c9123a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8Zm9jdXN8ZW58MHx8MHx8&w=1000&q=80'} alt="uploaded pic" />
-        </div>
-
-        <div className="tagBtContainer">
-          <button>{tags[0]}</button>
-          <button>{tags[1]}</button>
-          <button>{tags[2]}</button>
-          <button>{tags[3]}</button>
-          <button>{tags[4]}</button>
-          <button>{tags[5]}</button>
-          <button>{tags[1]}</button>
-          <button>{tags[2]}</button>
-          <button>{tags[3]}</button>
-          <button>{tags[4]}</button>
-          <button>{tags[5]}</button>
-          <button>{tags[1]}</button>
-         
+          })
+          return containSearchTerm;
+        })
         
-        </div>
-      </div> */}
+      } */}
 
+      {docs.map((doc, id) => {
+        // check if any of the doc.hashtag[i] match searchTerm
+        return (
+          <div className='img-wrap' key={id}>
+            <div className='main-image'>
+              <img src={doc.downloadURL} alt="uploaded pic" />
+            </div>
 
+            <div className="tagBtContainer">
 
-
+              {doc.hashtags && doc.hashtags.map((tag, i) => {
+                return (<button key={i}>{tag}</button>)
+              })
+              }
+            </div>
+          </div>
+        );
+      })}
 
     </div>
   )
