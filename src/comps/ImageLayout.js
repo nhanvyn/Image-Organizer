@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import useFirestoreHook from '../hooks/useFirestoreHook'
 
 
 const ImageLayout = ({ searchTerm, setSearchTerm, distinctTerms, setDistinctTerms }) => {
   const { docs } = useFirestoreHook('images');
+  const [photos, setPhotos] = useState([]);
   useEffect(() => {
     const allTerm = []
     docs.map((doc, i) => (
@@ -18,7 +19,7 @@ const ImageLayout = ({ searchTerm, setSearchTerm, distinctTerms, setDistinctTerm
     )
     console.log("distinctArr = " + distinctArr)
     setDistinctTerms(distinctArr)
-
+    setPhotos(Array.from(docs))
   }, [docs])
 
   useEffect(() => {
@@ -28,6 +29,25 @@ const ImageLayout = ({ searchTerm, setSearchTerm, distinctTerms, setDistinctTerm
   useEffect(() => {
     if (searchTerm) {
       console.log("IL term = " + searchTerm)
+    }
+
+    if (searchTerm !== '' && searchTerm !== "303: Set display to original docs") {
+      let arr = Array.from(docs).filter((photo) => {
+        var photoContainTerm = false;
+        photo.hashtags.map((tag) => {
+          if (tag === searchTerm) {
+            console.log("Photo contain searchTerm!!")
+            photoContainTerm = true
+          }
+        })
+        return photoContainTerm;
+      });
+
+      console.log("After apply filter:" + arr)
+      setPhotos(arr)
+    }
+    else {
+      setPhotos(Array.from(docs))
     }
 
   }, [searchTerm, setSearchTerm])
@@ -49,17 +69,17 @@ const ImageLayout = ({ searchTerm, setSearchTerm, distinctTerms, setDistinctTerm
         
       } */}
 
-      {docs.map((doc, id) => {
-        // check if any of the doc.hashtag[i] match searchTerm
+      {photos.length > 0 && photos.map((photo, id) => {
+        // check if any of the photo.hashtag[i] match searchTerm
         return (
           <div className='img-wrap' key={id}>
             <div className='main-image'>
-              <img src={doc.downloadURL} alt="uploaded pic" />
+              <img src={photo.downloadURL} alt="uploaded pic" />
             </div>
 
             <div className="tagBtContainer">
 
-              {doc.hashtags && doc.hashtags.map((tag, i) => {
+              {photo.hashtags && photo.hashtags.map((tag, i) => {
                 return (<button key={i}>{tag}</button>)
               })
               }

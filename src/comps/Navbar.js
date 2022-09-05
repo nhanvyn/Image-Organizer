@@ -3,14 +3,14 @@ import glass from '../assets/search.png'
 import { useState } from 'react'
 
 const Navbar = ({ searchTerm, setSearchTerm, distinctTerms, setDistinctTerms }) => {
-  const arr = ["dog", "cat", "ant", 'bear', "awp", "elephant", "dope", "amd"]
+ 
 
   const [value, setValue] = useState('');
   const onWordTyped = (e) => {
     setValue(e.target.value)
-    if (e.target.value == ''){
+    if (e.target.value === ''){
       console.log("Emptied")
-      setSearchTerm("HEY")
+      setSearchTerm("303: Set display to original docs")
     }
   }
 
