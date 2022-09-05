@@ -221,7 +221,7 @@ code {
   width: 95%;
 } */
 
-.modal-image-wrap button {
+.modal-image-wrap .removeBt {
   position: absolute;
   top: 10%;
   left: 90%;
@@ -260,6 +260,15 @@ code {
   border: 2px dashed rgb(220, 210, 210);
   border-radius: 3px;
   overflow: hidden;
+}
+
+.suggestContainer button {
+
+  position: relative;
+  cursor: pointer;
+  border-radius: 3px;
+  border: 1px solid rgb(63, 56, 56);
+  z-index: 11;
 }
 
 .tagBtContainer {
