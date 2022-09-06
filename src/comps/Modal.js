@@ -20,7 +20,7 @@ export const Modal = ({ showModal, setShowModal, searchTerm, setSearchTerm, dist
   const [isModelLoading, setIsModelLoading] = useState(false)
   const [model, setModel] = useState(null)
 
-  const getRandom = (min, max) =>{
+  const getRandom = (min, max) => {
     let step1 = max - min + 1;
     let step2 = Math.random() * step1;
     let result = Math.floor(step2) + min;
@@ -120,8 +120,8 @@ export const Modal = ({ showModal, setShowModal, searchTerm, setSearchTerm, dist
     }
 
   }
-  
-  
+
+
 
   const SubmitImage = (e) => {
     if (imageArr.length > 0) {
@@ -132,8 +132,9 @@ export const Modal = ({ showModal, setShowModal, searchTerm, setSearchTerm, dist
 
   const GenerateTag = async (i, e) => {
     const results = await model.classify(imageRef.current[i])
-    const options = [...results[0].className.toString().split(","), ...results[1].className.toString().split(","), ...results[2].className.toString().split(",") ]
-    let random_i = getRandom(0, options.length-1)
+    const options = [...results[0].className.toString().toLowerCase().split(","), ...results[1].className.toString().toLowerCase().split(","), ...results[2].className.toString().toLowerCase().split(",")]
+
+    let random_i = getRandom(0, options.length - 1)
     console.log(options)
     var value = options[random_i]
     // prevent adding duplicates
@@ -150,7 +151,7 @@ export const Modal = ({ showModal, setShowModal, searchTerm, setSearchTerm, dist
 
       matchImage["tags"].push(value)
     }
-    
+
   }
   return (
     <>

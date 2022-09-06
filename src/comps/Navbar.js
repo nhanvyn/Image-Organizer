@@ -3,12 +3,12 @@ import glass from '../assets/search.png'
 import { useState } from 'react'
 
 const Navbar = ({ searchTerm, setSearchTerm, distinctTerms, setDistinctTerms }) => {
- 
+
 
   const [value, setValue] = useState('');
   const onWordTyped = (e) => {
     setValue(e.target.value)
-    if (e.target.value === ''){
+    if (e.target.value === '') {
       console.log("Emptied")
       setSearchTerm("303: Set display to original docs")
     }
@@ -63,7 +63,7 @@ const Navbar = ({ searchTerm, setSearchTerm, distinctTerms, setDistinctTerms }) 
 
                 const sTerm = value.toString().toLowerCase();
                 const fullName = item.toString().toLowerCase();
-                return sTerm && fullName.startsWith(sTerm) && fullName !== sTerm
+                return sTerm && fullName.includes(sTerm) && fullName !== sTerm
               }))
                 ?.map((f_item) => {
                   return (
